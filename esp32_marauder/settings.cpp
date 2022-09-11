@@ -6,7 +6,7 @@ String Settings::getSettingsString() {
 
 bool Settings::begin() {
   if(!SPIFFS.begin(FORMAT_SPIFFS_IF_FAILED)){
-    Serial.println("Settings SPIFFS Mount Failed");
+    MegaSerial.println("Settings SPIFFS Mount Failed");
     return false;
   }
 
@@ -19,7 +19,7 @@ bool Settings::begin() {
     
     if (!settingsFile) {
       settingsFile.close();
-      Serial.println(F("Could not find settings file"));
+      MegaSerial.println(F("Could not find settings file"));
       if (this->createDefaultSettings(SPIFFS))
         return true;
       else
@@ -27,7 +27,7 @@ bool Settings::begin() {
     }
   }
   else {
-    Serial.println("Settings file does not exist");
+    MegaSerial.println("Settings file does not exist");
     if (this->createDefaultSettings(SPIFFS))
       return true;
     else
@@ -38,7 +38,7 @@ bool Settings::begin() {
   DynamicJsonDocument jsonBuffer(1024);
   DeserializationError error = deserializeJson(jsonBuffer, settingsFile);
   serializeJson(jsonBuffer, json_string);
-  //Serial.println("Settings: " + (String)json_string + "\n");
+  //MegaSerial.println("Settings: " + (String)json_string + "\n");
   //this->printJsonSettings(json_string);
 
   this->json_settings_string = json_string;
@@ -55,7 +55,7 @@ int Settings::loadSetting<int>(String key) {
   DynamicJsonDocument json(1024); // ArduinoJson v6
 
   if (deserializeJson(json, this->json_settings_string)) {
-    Serial.println("\nCould not parse json");
+    MegaSerial.println("\nCould not parse json");
   }
 
   for (int i = 0; i < json["Settings"].size(); i++) {
@@ -74,7 +74,7 @@ String Settings::loadSetting<String>(String key) {
   DynamicJsonDocument json(1024); // ArduinoJson v6
 
   if (deserializeJson(json, this->json_settings_string)) {
-    Serial.println("\nCould not parse json");
+    MegaSerial.println("\nCould not parse json");
   }
 
   for (int i = 0; i < json["Settings"].size(); i++) {
@@ -91,7 +91,7 @@ bool Settings::loadSetting<bool>(String key) {
   DynamicJsonDocument json(1024); // ArduinoJson v6
 
   if (deserializeJson(json, this->json_settings_string)) {
-    Serial.println("\nCould not parse json");
+    MegaSerial.println("\nCould not parse json");
   }
 
   for (int i = 0; i < json["Settings"].size(); i++) {
@@ -108,7 +108,7 @@ uint8_t Settings::loadSetting<uint8_t>(String key) {
   DynamicJsonDocument json(1024); // ArduinoJson v6
 
   if (deserializeJson(json, this->json_settings_string)) {
-    Serial.println("\nCould not parse json");
+    MegaSerial.println("\nCould not parse json");
   }
 
   for (int i = 0; i < json["Settings"].size(); i++) {
@@ -127,7 +127,7 @@ bool Settings::saveSetting<bool>(String key, bool value) {
   DynamicJsonDocument json(1024); // ArduinoJson v6
 
   if (deserializeJson(json, this->json_settings_string)) {
-    Serial.println("\nCould not parse json");
+    MegaSerial.println("\nCould not parse json");
   }
 
   String settings_string;
@@ -136,20 +136,20 @@ bool Settings::saveSetting<bool>(String key, bool value) {
     if (json["Settings"][i]["name"].as<String>() == key) {
       json["Settings"][i]["value"] = value;
 
-      Serial.println("Saving setting...");
+      MegaSerial.println("Saving setting...");
 
       File settingsFile = SPIFFS.open("/settings.json", FILE_WRITE);
 
       if (!settingsFile) {
-        Serial.println(F("Failed to create settings file"));
+        MegaSerial.println(F("Failed to create settings file"));
         return false;
       }
 
       if (serializeJson(json, settingsFile) == 0) {
-        Serial.println(F("Failed to write to file"));
+        MegaSerial.println(F("Failed to write to file"));
       }
       if (serializeJson(json, settings_string) == 0) {
-        Serial.println(F("Failed to write to string"));
+        MegaSerial.println(F("Failed to write to string"));
       }
     
       // Close the file
@@ -169,19 +169,19 @@ bool Settings::toggleSetting(String key) {
   DynamicJsonDocument json(1024); // ArduinoJson v6
 
   if (deserializeJson(json, this->json_settings_string)) {
-    Serial.println("\nCould not parse json");
+    MegaSerial.println("\nCould not parse json");
   }
 
   for (int i = 0; i < json["Settings"].size(); i++) {
     if (json["Settings"][i]["name"].as<String>() == key) {
       if (json["Settings"][i]["value"]) {
         saveSetting<bool>(key, false);
-        Serial.println("Setting value to false");
+        MegaSerial.println("Setting value to false");
         return false;
       }
       else {
         saveSetting<bool>(key, true);
-        Serial.println("Setting value to true");
+        MegaSerial.println("Setting value to true");
         return true;
       }
 
@@ -194,7 +194,7 @@ String Settings::setting_index_to_name(int i) {
   DynamicJsonDocument json(1024); // ArduinoJson v6
 
   if (deserializeJson(json, this->json_settings_string)) {
-    Serial.println("\nCould not parse json");
+    MegaSerial.println("\nCould not parse json");
   }
 
   return json["Settings"][i]["name"];
@@ -204,7 +204,7 @@ int Settings::getNumberSettings() {
   DynamicJsonDocument json(1024); // ArduinoJson v6
 
   if (deserializeJson(json, this->json_settings_string)) {
-    Serial.println("\nCould not parse json");
+    MegaSerial.println("\nCould not parse json");
   }
 
   return json["Settings"].size();
@@ -214,7 +214,7 @@ String Settings::getSettingType(String key) {
   DynamicJsonDocument json(1024); // ArduinoJson v6
 
   if (deserializeJson(json, this->json_settings_string)) {
-    Serial.println("\nCould not parse json");
+    MegaSerial.println("\nCould not parse json");
   }
   
   for (int i = 0; i < json["Settings"].size(); i++) {
@@ -227,25 +227,25 @@ void Settings::printJsonSettings(String json_string) {
   DynamicJsonDocument json(1024); // ArduinoJson v6
 
   if (deserializeJson(json, json_string)) {
-    Serial.println("\nCould not parse json");
+    MegaSerial.println("\nCould not parse json");
   }
   
-  Serial.println("Settings\n----------------------------------------------");
+  MegaSerial.println("Settings\n----------------------------------------------");
   for (int i = 0; i < json["Settings"].size(); i++) {
-    Serial.println("Name: " + json["Settings"][i]["name"].as<String>());
-    Serial.println("Type: " + json["Settings"][i]["type"].as<String>());
-    Serial.println("Value: " + json["Settings"][i]["value"].as<String>());
-    Serial.println("----------------------------------------------");
+    MegaSerial.println("Name: " + json["Settings"][i]["name"].as<String>());
+    MegaSerial.println("Type: " + json["Settings"][i]["type"].as<String>());
+    MegaSerial.println("Value: " + json["Settings"][i]["value"].as<String>());
+    MegaSerial.println("----------------------------------------------");
   }
 }
 
 bool Settings::createDefaultSettings(fs::FS &fs) {
-  Serial.println(F("Creating default settings file: settings.json"));
+  MegaSerial.println(F("Creating default settings file: settings.json"));
   
   File settingsFile = fs.open("/settings.json", FILE_WRITE);
 
   if (!settingsFile) {
-    Serial.println(F("Failed to create settings file"));
+    MegaSerial.println(F("Failed to create settings file"));
     return false;
   }
 
@@ -284,10 +284,10 @@ bool Settings::createDefaultSettings(fs::FS &fs) {
 
   //jsonBuffer.printTo(settingsFile);
   if (serializeJson(jsonBuffer, settingsFile) == 0) {
-    Serial.println(F("Failed to write to file"));
+    MegaSerial.println(F("Failed to write to file"));
   }
   if (serializeJson(jsonBuffer, settings_string) == 0) {
-    Serial.println(F("Failed to write to string"));
+    MegaSerial.println(F("Failed to write to string"));
   }
 
   // Close the file

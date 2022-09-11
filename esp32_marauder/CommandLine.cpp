@@ -4,22 +4,22 @@ CommandLine::CommandLine() {
 }
 
 void CommandLine::RunSetup() {
-  Serial.println(this->ascii_art);
+  MegaSerial.println(this->ascii_art);
 
-  Serial.println(F("\n\n--------------------------------\n"));
-  Serial.println(F("         ESP32 Marauder      \n"));
-  Serial.println("            " + version_number + "\n");
-  Serial.println(F("       By: justcallmekoko\n"));
-  Serial.println(F("--------------------------------\n\n"));
+  MegaSerial.println(F("\n\n--------------------------------\n"));
+  MegaSerial.println(F("         ESP32 Marauder      \n"));
+  MegaSerial.println("            " + version_number + "\n");
+  MegaSerial.println(F("       By: justcallmekoko\n"));
+  MegaSerial.println(F("--------------------------------\n\n"));
   
-  Serial.print("> ");
+  MegaSerial.print("> ");
 }
 
 String CommandLine::getSerialInput() {
   String input = "";
 
-  if (Serial.available() > 0)
-    input = Serial.readStringUntil('\n');
+  if (MegaSerial.available() > 0)
+    input = MegaSerial.readStringUntil('\n');
 
   input.trim();
   return input;
@@ -31,7 +31,7 @@ void CommandLine::main(uint32_t currentTime) {
   this->runCommand(input);
 
   if (input != "")
-    Serial.print("> ");
+    MegaSerial.print("> ");
 }
 
 LinkedList<String> CommandLine::parseCommand(String input, char* delim) {
@@ -95,7 +95,7 @@ bool CommandLine::hasSSIDs() {
 
 void CommandLine::runCommand(String input) {
   if (input != "")
-    Serial.println("#" + input);
+    MegaSerial.println("#" + input);
   else
     return;
 
@@ -105,40 +105,40 @@ void CommandLine::runCommand(String input) {
 
   // Help
   if (cmd_args.get(0) == HELP_CMD) {
-    Serial.println(HELP_HEAD);
-    Serial.println(HELP_CH_CMD);
-    Serial.println(HELP_SETTINGS_CMD);
-    Serial.println(HELP_CLEARAP_CMD_A);
-    Serial.println(HELP_CLEARAP_CMD_B);
-    Serial.println(HELP_REBOOT_CMD);
-    Serial.println(HELP_UPDATE_CMD_A);
-    Serial.println(HELP_UPDATE_CMD_B);
+    MegaSerial.println(HELP_HEAD);
+    MegaSerial.println(HELP_CH_CMD);
+    MegaSerial.println(HELP_SETTINGS_CMD);
+    MegaSerial.println(HELP_CLEARAP_CMD_A);
+    MegaSerial.println(HELP_CLEARAP_CMD_B);
+    MegaSerial.println(HELP_REBOOT_CMD);
+    MegaSerial.println(HELP_UPDATE_CMD_A);
+    MegaSerial.println(HELP_UPDATE_CMD_B);
     
     // WiFi sniff/scan
-    Serial.println(HELP_SCANAP_CMD);
-    Serial.println(HELP_SNIFF_BEACON_CMD);
-    Serial.println(HELP_SNIFF_PROBE_CMD);
-    Serial.println(HELP_SNIFF_PWN_CMD);
-    Serial.println(HELP_SNIFF_ESP_CMD);
-    Serial.println(HELP_SNIFF_DEAUTH_CMD);
-    Serial.println(HELP_SNIFF_PMKID_CMD);
-    Serial.println(HELP_STOPSCAN_CMD);
+    MegaSerial.println(HELP_SCANAP_CMD);
+    MegaSerial.println(HELP_SNIFF_BEACON_CMD);
+    MegaSerial.println(HELP_SNIFF_PROBE_CMD);
+    MegaSerial.println(HELP_SNIFF_PWN_CMD);
+    MegaSerial.println(HELP_SNIFF_ESP_CMD);
+    MegaSerial.println(HELP_SNIFF_DEAUTH_CMD);
+    MegaSerial.println(HELP_SNIFF_PMKID_CMD);
+    MegaSerial.println(HELP_STOPSCAN_CMD);
     
     // WiFi attack
-    Serial.println(HELP_ATTACK_CMD);
+    MegaSerial.println(HELP_ATTACK_CMD);
     
     // WiFi Aux
-    Serial.println(HELP_LIST_AP_CMD_A);
-    Serial.println(HELP_LIST_AP_CMD_B);
-    Serial.println(HELP_SEL_CMD_A);
-    Serial.println(HELP_SEL_CMD_B);
-    Serial.println(HELP_SSID_CMD_A);
-    Serial.println(HELP_SSID_CMD_B);
+    MegaSerial.println(HELP_LIST_AP_CMD_A);
+    MegaSerial.println(HELP_LIST_AP_CMD_B);
+    MegaSerial.println(HELP_SEL_CMD_A);
+    MegaSerial.println(HELP_SEL_CMD_B);
+    MegaSerial.println(HELP_SSID_CMD_A);
+    MegaSerial.println(HELP_SSID_CMD_B);
     
     // Bluetooth sniff/scan
-    Serial.println(HELP_BT_SNIFF_CMD);
-    Serial.println(HELP_BT_SKIM_CMD);
-    Serial.println(HELP_FOOT);
+    MegaSerial.println(HELP_BT_SNIFF_CMD);
+    MegaSerial.println(HELP_BT_SKIM_CMD);
+    MegaSerial.println(HELP_FOOT);
     return;
   }
 
@@ -156,7 +156,7 @@ void CommandLine::runCommand(String input) {
     
     wifi_scan_obj.StartScan(WIFI_SCAN_OFF);
 
-    Serial.println("Stopping WiFi tran/recv");
+    MegaSerial.println("Stopping WiFi tran/recv");
 
     // If we don't do this, the text and button coordinates will be off
     #ifdef HAS_SCREEN
@@ -170,12 +170,12 @@ void CommandLine::runCommand(String input) {
     int ch_set = this->argSearch(&cmd_args, "-s");
     
     if (cmd_args.size() == 1) {
-      Serial.println("Current channel: " + (String)wifi_scan_obj.set_channel);
+      MegaSerial.println("Current channel: " + (String)wifi_scan_obj.set_channel);
     }
     else if (ch_set != -1) {
       wifi_scan_obj.set_channel = cmd_args.get(ch_set + 1).toInt();
       wifi_scan_obj.changeChannel();
-      Serial.println("Set channel: " + (String)wifi_scan_obj.set_channel);
+      MegaSerial.println("Set channel: " + (String)wifi_scan_obj.set_channel);
     }
   }
   // Clear APs
@@ -212,19 +212,19 @@ void CommandLine::runCommand(String input) {
       else if (da_sw != -1)
         result = settings_obj.saveSetting<bool>(setting_name, false);
       else {
-        Serial.println("You did not properly enable/disable this setting.");
+        MegaSerial.println("You did not properly enable/disable this setting.");
         return;
       }
 
       if (!result) {
-        Serial.println("Could not successfully update setting \"" + setting_name + "\"");
+        MegaSerial.println("Could not successfully update setting \"" + setting_name + "\"");
         return;
       }
     }
   }
 
   else if (cmd_args.get(0) == REBOOT_CMD) {
-    Serial.println("Rebooting...");
+    MegaSerial.println("Rebooting...");
     ESP.restart();
   }
 
@@ -240,17 +240,17 @@ void CommandLine::runCommand(String input) {
       #endif
 
       if (full_sw == -1) {
-        Serial.println("Starting AP scan. Stop with " + (String)STOPSCAN_CMD);
+        MegaSerial.println("Starting AP scan. Stop with " + (String)STOPSCAN_CMD);
         wifi_scan_obj.StartScan(WIFI_SCAN_TARGET_AP, TFT_MAGENTA);
       }
       else {
-        Serial.println("Starting Full AP scan. Stop with " + (String)STOPSCAN_CMD);
+        MegaSerial.println("Starting Full AP scan. Stop with " + (String)STOPSCAN_CMD);
         wifi_scan_obj.StartScan(WIFI_SCAN_TARGET_AP_FULL, TFT_MAGENTA);
       }
     }
     // Beacon sniff
     else if (cmd_args.get(0) == SNIFF_BEACON_CMD) {
-      Serial.println("Starting Beacon sniff. Stop with " + (String)STOPSCAN_CMD);
+      MegaSerial.println("Starting Beacon sniff. Stop with " + (String)STOPSCAN_CMD);
       #ifdef HAS_SCREEN
         display_obj.clearScreen();
         menu_function_obj.drawStatusBar();
@@ -259,7 +259,7 @@ void CommandLine::runCommand(String input) {
     }
     // Probe sniff
     else if (cmd_args.get(0) == SNIFF_PROBE_CMD) {
-      Serial.println("Starting Probe sniff. Stop with " + (String)STOPSCAN_CMD);
+      MegaSerial.println("Starting Probe sniff. Stop with " + (String)STOPSCAN_CMD);
       #ifdef HAS_SCREEN
         display_obj.clearScreen();
         menu_function_obj.drawStatusBar();
@@ -268,7 +268,7 @@ void CommandLine::runCommand(String input) {
     }
     // Deauth sniff
     else if (cmd_args.get(0) == SNIFF_DEAUTH_CMD) {
-      Serial.println("Starting Deauth sniff. Stop with " + (String)STOPSCAN_CMD);
+      MegaSerial.println("Starting Deauth sniff. Stop with " + (String)STOPSCAN_CMD);
       #ifdef HAS_SCREEN
         display_obj.clearScreen();
         menu_function_obj.drawStatusBar();
@@ -277,7 +277,7 @@ void CommandLine::runCommand(String input) {
     }
     // Pwn sniff
     else if (cmd_args.get(0) == SNIFF_PWN_CMD) {
-      Serial.println("Starting Pwnagotchi sniff. Stop with " + (String)STOPSCAN_CMD);
+      MegaSerial.println("Starting Pwnagotchi sniff. Stop with " + (String)STOPSCAN_CMD);
       #ifdef HAS_SCREEN
         display_obj.clearScreen();
         menu_function_obj.drawStatusBar();
@@ -286,7 +286,7 @@ void CommandLine::runCommand(String input) {
     }
     // Espressif sniff
     else if (cmd_args.get(0) == SNIFF_ESP_CMD) {
-      Serial.println("Starting Espressif device sniff. Stop with " + (String)STOPSCAN_CMD);
+      MegaSerial.println("Starting Espressif device sniff. Stop with " + (String)STOPSCAN_CMD);
       #ifdef HAS_SCREEN
         display_obj.clearScreen();
         menu_function_obj.drawStatusBar();
@@ -301,16 +301,16 @@ void CommandLine::runCommand(String input) {
       if (ch_sw != -1) {
         wifi_scan_obj.set_channel = cmd_args.get(ch_sw + 1).toInt();
         wifi_scan_obj.changeChannel();
-        Serial.println("Set channel: " + (String)wifi_scan_obj.set_channel);
+        MegaSerial.println("Set channel: " + (String)wifi_scan_obj.set_channel);
         
       }
 
       if (d_sw == -1) {
-        Serial.println("Starting PMKID sniff on channel " + (String)wifi_scan_obj.set_channel + ". Stop with " + (String)STOPSCAN_CMD);
+        MegaSerial.println("Starting PMKID sniff on channel " + (String)wifi_scan_obj.set_channel + ". Stop with " + (String)STOPSCAN_CMD);
         wifi_scan_obj.StartScan(WIFI_SCAN_EAPOL, TFT_VIOLET);
       }
       else {
-        Serial.println("Starting PMKID sniff with deauthentication on channel " + (String)wifi_scan_obj.set_channel + ". Stop with " + (String)STOPSCAN_CMD);
+        MegaSerial.println("Starting PMKID sniff with deauthentication on channel " + (String)wifi_scan_obj.set_channel + ". Stop with " + (String)STOPSCAN_CMD);
         wifi_scan_obj.StartScan(WIFI_SCAN_ACTIVE_EAPOL, TFT_VIOLET);
       }
     }
@@ -324,7 +324,7 @@ void CommandLine::runCommand(String input) {
       int ap_beacon_sw = this->argSearch(&cmd_args, "-a");
   
       if (attack_type_switch == -1) {
-        Serial.println("You must specify an attack type");
+        MegaSerial.println("You must specify an attack type");
         return;
       }
       else {
@@ -334,14 +334,14 @@ void CommandLine::runCommand(String input) {
         // Deauth
         if (attack_type == ATTACK_TYPE_DEAUTH) {
           if (!this->apSelected()) {
-            Serial.println("You don't have any targets selected. Use " + (String)SEL_CMD);
+            MegaSerial.println("You don't have any targets selected. Use " + (String)SEL_CMD);
             return;
           }
           #ifdef HAS_SCREEN
             display_obj.clearScreen();
             menu_function_obj.drawStatusBar();
           #endif
-          Serial.println("Starting Deauthentication attack. Stop with " + (String)STOPSCAN_CMD);
+          MegaSerial.println("Starting Deauthentication attack. Stop with " + (String)STOPSCAN_CMD);
           wifi_scan_obj.StartScan(WIFI_ATTACK_DEAUTH, TFT_RED);
         }
         // Beacon
@@ -349,14 +349,14 @@ void CommandLine::runCommand(String input) {
           // spam by list
           if (list_beacon_sw != -1) {
             if (!this->hasSSIDs()) {
-              Serial.println("You don't have any SSIDs in your list. Use " + (String)SSID_CMD);
+              MegaSerial.println("You don't have any SSIDs in your list. Use " + (String)SSID_CMD);
               return;
             }
             #ifdef HAS_SCREEN
               display_obj.clearScreen();
               menu_function_obj.drawStatusBar();
             #endif
-            Serial.println("Starting Beacon list spam. Stop with " + (String)STOPSCAN_CMD);
+            MegaSerial.println("Starting Beacon list spam. Stop with " + (String)STOPSCAN_CMD);
             wifi_scan_obj.StartScan(WIFI_ATTACK_BEACON_LIST, TFT_RED);
           }
           // spam with random
@@ -365,32 +365,32 @@ void CommandLine::runCommand(String input) {
               display_obj.clearScreen();
               menu_function_obj.drawStatusBar();
             #endif
-            Serial.println("Starting random Beacon spam. Stop with " + (String)STOPSCAN_CMD);
+            MegaSerial.println("Starting random Beacon spam. Stop with " + (String)STOPSCAN_CMD);
             wifi_scan_obj.StartScan(WIFI_ATTACK_BEACON_SPAM, TFT_ORANGE);
           }
           // Spam from AP list
           else if (ap_beacon_sw != -1) {
             if (!this->apSelected()) {
-              Serial.println("You don't have any targets selected. Use " + (String)SEL_CMD);
+              MegaSerial.println("You don't have any targets selected. Use " + (String)SEL_CMD);
               return;
             }
             #ifdef HAS_SCREEN
               display_obj.clearScreen();
               menu_function_obj.drawStatusBar();
             #endif
-            Serial.println("Starting Targeted AP Beacon spam. Stop with " + (String)STOPSCAN_CMD);
+            MegaSerial.println("Starting Targeted AP Beacon spam. Stop with " + (String)STOPSCAN_CMD);
             wifi_scan_obj.StartScan(WIFI_ATTACK_AP_SPAM, TFT_MAGENTA);
           }
           else {
-            Serial.println("You did not specify a beacon attack type");
+            MegaSerial.println("You did not specify a beacon attack type");
           }
         }
         else if (attack_type == ATTACK_TYPE_PROBE) {
           if (!this->apSelected()) {
-            Serial.println("You don't have any targets selected. Use " + (String)SEL_CMD);
+            MegaSerial.println("You don't have any targets selected. Use " + (String)SEL_CMD);
             return;
           }
-          Serial.println("Starting Probe spam. Stop with " + (String)STOPSCAN_CMD);
+          MegaSerial.println("Starting Probe spam. Stop with " + (String)STOPSCAN_CMD);
           #ifdef HAS_SCREEN
             display_obj.clearScreen();
             menu_function_obj.drawStatusBar();
@@ -398,7 +398,7 @@ void CommandLine::runCommand(String input) {
           wifi_scan_obj.StartScan(WIFI_ATTACK_AUTH, TFT_RED);
         }
         else if (attack_type == ATTACK_TYPE_RR) {
-          Serial.println("Starting Rick Roll Beacon spam. Stop with " + (String)STOPSCAN_CMD);
+          MegaSerial.println("Starting Rick Roll Beacon spam. Stop with " + (String)STOPSCAN_CMD);
           #ifdef HAS_SCREEN
             display_obj.clearScreen();
             menu_function_obj.drawStatusBar();
@@ -406,7 +406,7 @@ void CommandLine::runCommand(String input) {
           wifi_scan_obj.StartScan(WIFI_ATTACK_RICK_ROLL, TFT_YELLOW);
         }
         else {
-          Serial.println("Attack type not properly defined");
+          MegaSerial.println("Attack type not properly defined");
           return;
         }
       }
@@ -415,7 +415,7 @@ void CommandLine::runCommand(String input) {
     //// Bluetooth scan/attack commands
     // Bluetooth scan
     if (cmd_args.get(0) == BT_SNIFF_CMD) {
-      Serial.println("Starting Bluetooth scan. Stop with " + (String)STOPSCAN_CMD);
+      MegaSerial.println("Starting Bluetooth scan. Stop with " + (String)STOPSCAN_CMD);
       #ifdef HAS_SCREEN
         display_obj.clearScreen();
         menu_function_obj.drawStatusBar();
@@ -424,7 +424,7 @@ void CommandLine::runCommand(String input) {
     }
     // Bluetooth CC Skimmer scan
     else if (cmd_args.get(0) == BT_SKIM_CMD) {
-      Serial.println("Starting Bluetooth CC Skimmer scan. Stop with " + (String)STOPSCAN_CMD);
+      MegaSerial.println("Starting Bluetooth CC Skimmer scan. Stop with " + (String)STOPSCAN_CMD);
       #ifdef HAS_SCREEN
         display_obj.clearScreen();
         menu_function_obj.drawStatusBar();
@@ -439,7 +439,7 @@ void CommandLine::runCommand(String input) {
 
       // Update via OTA
       if (w_sw != -1) {
-        Serial.println("Starting Marauder OTA Update. Stop with " + (String)STOPSCAN_CMD);
+        MegaSerial.println("Starting Marauder OTA Update. Stop with " + (String)STOPSCAN_CMD);
         wifi_scan_obj.currentScanMode = OTA_UPDATE;
         //#ifdef HAS_SCREEN
         //  menu_function_obj.changeMenu(menu_function_obj.updateMenu);
@@ -449,7 +449,7 @@ void CommandLine::runCommand(String input) {
       // Update via SD
       else if (sd_sw != -1) {
         if (!sd_obj.supported) {
-          Serial.println("SD card is not connected. Cannot perform SD Update");
+          MegaSerial.println("SD card is not connected. Cannot perform SD Update");
           return;
         }
       }
@@ -467,22 +467,22 @@ void CommandLine::runCommand(String input) {
     if (ap_sw != -1) {
       for (int i = 0; i < access_points->size(); i++) {
         if (access_points->get(i).selected)
-          Serial.println("[" + (String)i + "] " + access_points->get(i).essid + " " + (String)access_points->get(i).rssi + " (selected)");
+          MegaSerial.println("[" + (String)i + "] " + access_points->get(i).essid + " " + (String)access_points->get(i).rssi + " (selected)");
         else
-          Serial.println("[" + (String)i + "] " + access_points->get(i).essid + " " + (String)access_points->get(i).rssi);
+          MegaSerial.println("[" + (String)i + "] " + access_points->get(i).essid + " " + (String)access_points->get(i).rssi);
       }
     }
     // List SSIDs
     else if (ss_sw != -1) {
       for (int i = 0; i < ssids->size(); i++) {
         if (ssids->get(i).selected)
-          Serial.println("[" + (String)i + "] " + ssids->get(i).essid + " (selected)");
+          MegaSerial.println("[" + (String)i + "] " + ssids->get(i).essid + " (selected)");
         else
-          Serial.println("[" + (String)i + "] " + ssids->get(i).essid);
+          MegaSerial.println("[" + (String)i + "] " + ssids->get(i).essid);
       }
     }
     else {
-      Serial.println("You did not specify which list to show");
+      MegaSerial.println("You did not specify which list to show");
       return;
     }
   }
@@ -520,7 +520,7 @@ void CommandLine::runCommand(String input) {
         for (int i = 0; i < ap_index.size(); i++) {
           int index = ap_index.get(i).toInt();
           if (!this->inRange(access_points->size(), index)) {
-            Serial.println("Index not in range: " + (String)index);
+            MegaSerial.println("Index not in range: " + (String)index);
             continue;
           }
           if (access_points->get(index).selected) {
@@ -547,7 +547,7 @@ void CommandLine::runCommand(String input) {
       for (int i = 0; i < ss_index.size(); i++) {
         int index = ss_index.get(i).toInt();
         if (!this->inRange(ssids->size(), index)) {
-          Serial.println("Index not in range: " + (String)index);
+          MegaSerial.println("Index not in range: " + (String)index);
           continue;
         }
         if (ssids->get(index).selected) {
@@ -565,7 +565,7 @@ void CommandLine::runCommand(String input) {
       }
     }
     else {
-      Serial.println("You did not specify which list to select from");
+      MegaSerial.println("You did not specify which list to select from");
       return;
     }
   }
@@ -589,20 +589,20 @@ void CommandLine::runCommand(String input) {
         wifi_scan_obj.addSSID(essid);
       }
       else {
-        Serial.println("You did not specify how to add SSIDs");
+        MegaSerial.println("You did not specify how to add SSIDs");
       }
     }
     // Remove SSID
     else if (rem_sw != -1) {
       int index = cmd_args.get(rem_sw + 1).toInt();
       if (!this->inRange(ssids->size(), index)) {
-        Serial.println("Index not in range: " + (String)index);
+        MegaSerial.println("Index not in range: " + (String)index);
         return;
       }
       ssids->remove(index);
     }
     else {
-      Serial.println("You did not specify whether to add or remove SSIDs");
+      MegaSerial.println("You did not specify whether to add or remove SSIDs");
       return;
     }
   }

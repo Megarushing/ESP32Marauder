@@ -12,6 +12,7 @@
 //extern bool useSD;
 
 extern Settings settings_obj;
+extern HardwareSerial MegaSerial;
 
 class Buffer {
   public:

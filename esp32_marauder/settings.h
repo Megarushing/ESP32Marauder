@@ -15,6 +15,8 @@
   extern Display display_obj;
 #endif
 
+extern HardwareSerial MegaSerial;
+
 class Settings {
 
   private:

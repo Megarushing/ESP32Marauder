@@ -1,13 +1,13 @@
 #include "a32u4_interface.h"
 
-HardwareSerial MySerial_two(2);
+HardwareSerial MySerial_two(2); //this UART doesnt exist in ESP32-S2 Mini
 
 void A32u4Interface::begin() {
-  MySerial_two.begin(BAUD32U4, SERIAL_8N1, 25, 4);
+  MySerial_two.begin(BAUD32U4, SERIAL_8N1, 35, 33);
 
   delay(2000);
 
-  Serial.println("Setup A32U4 Serial Interface");
+  MegaSerial.println("Setup A32U4 Serial Interface");
 
   MySerial_two.println("DELAY 1");
 
@@ -21,7 +21,7 @@ void A32u4Interface::begin() {
 
   //display_string.trim();
 
-  //Serial.println("\nDisplay string: " + (String)display_string);
+  //MegaSerial.println("\nDisplay string: " + (String)display_string);
 
   if (a32u4_rep != 0) {
     this->supported = true;
@@ -37,8 +37,8 @@ void A32u4Interface::begin() {
       display_obj.tft.println("ATmega32U4 Not Found");
       display_obj.tft.setTextColor(TFT_CYAN, TFT_BLACK);
     #endif
-    Serial.print("A32U4 Said: ");
-    Serial.println(a32u4_rep);
+    MegaSerial.print("A32U4 Said: ");
+    MegaSerial.println(a32u4_rep);
   }
 
   this->initTime = millis();
@@ -59,10 +59,10 @@ void A32u4Interface::main(uint32_t current_time) {
     //MySerial_two.write("PING");
 
     //delay(1);
-    
+
     if (MySerial_two.available()) {
-      Serial.println("Got A32U4 Serial data");
-      Serial.println(MySerial_two.read());
+      MegaSerial.println("Got A32U4 Serial data");
+      MegaSerial.println(MySerial_two.read());
     }
   }
 

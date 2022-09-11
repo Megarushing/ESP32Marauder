@@ -11,6 +11,7 @@
 #include <Update.h>
 
 extern Buffer buffer_obj;
+extern HardwareSerial MegaSerial;
 #ifdef HAS_SCREEN
   extern Display display_obj;
 #endif

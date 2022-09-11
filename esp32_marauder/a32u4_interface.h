@@ -14,6 +14,8 @@
   extern Display display_obj;
 #endif
 
+extern HardwareSerial MegaSerial;
+
 class A32u4Interface {
   public:
     bool supported = false;

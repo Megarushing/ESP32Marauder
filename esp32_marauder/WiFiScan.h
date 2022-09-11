@@ -70,6 +70,7 @@
 #ifdef HAS_SCREEN
   extern Display display_obj;
 #endif
+extern HardwareSerial MegaSerial;
 extern SDInterface sd_obj;
 extern Buffer buffer_obj;
 extern BatteryInterface battery_obj;

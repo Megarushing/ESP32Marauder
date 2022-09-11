@@ -7,10 +7,10 @@ bool SDInterface::initSD() {
   #ifdef KIT
     pinMode(SD_DET, INPUT);
     if (digitalRead(SD_DET) == LOW) {
-      Serial.println(F("SD Card Detect Pin Detected"));
+      MegaSerial.println(F("SD Card Detect Pin Detected"));
     }
     else {
-      Serial.println(F("SD Card Detect Pin Not Detected"));
+      MegaSerial.println(F("SD Card Detect Pin Not Detected"));
       this->supported = false;
       return false;
     }
@@ -21,7 +21,7 @@ bool SDInterface::initSD() {
   delay(10);
   
   if (!SD.begin(SD_CS)) {
-    Serial.println(F("Failed to mount SD Card"));
+    MegaSerial.println(F("Failed to mount SD Card"));
     this->supported = false;
     return false;
   }
@@ -29,17 +29,17 @@ bool SDInterface::initSD() {
     this->supported = true;
     this->cardType = SD.cardType();
     //if (cardType == CARD_MMC)
-    //  Serial.println(F("SD: MMC Mounted"));
+    //  MegaSerial.println(F("SD: MMC Mounted"));
     //else if(cardType == CARD_SD)
-    //    Serial.println(F("SD: SDSC Mounted"));
+    //    MegaSerial.println(F("SD: SDSC Mounted"));
     //else if(cardType == CARD_SDHC)
-    //    Serial.println(F("SD: SDHC Mounted"));
+    //    MegaSerial.println(F("SD: SDHC Mounted"));
     //else
-    //    Serial.println(F("SD: UNKNOWN Card Mounted"));
+    //    MegaSerial.println(F("SD: UNKNOWN Card Mounted"));
 
     this->cardSizeMB = SD.cardSize() / (1024 * 1024);
     
-    //Serial.printf("SD Card Size: %lluMB\n", this->cardSizeMB);
+    //MegaSerial.printf("SD Card Size: %lluMB\n", this->cardSizeMB);
 
     if (this->supported) {
       const int NUM_DIGITS = log10(this->cardSizeMB) + 1;
@@ -59,10 +59,10 @@ bool SDInterface::initSD() {
     buffer_obj = Buffer();
     
     if (!SD.exists("/SCRIPTS")) {
-      Serial.println("/SCRIPTS does not exist. Creating...");
+      MegaSerial.println("/SCRIPTS does not exist. Creating...");
 
       SD.mkdir("/SCRIPTS");
-      Serial.println("/SCRIPTS created");
+      MegaSerial.println("/SCRIPTS created");
     }
     
     return true;
@@ -97,7 +97,7 @@ void SDInterface::runUpdate() {
         display_obj.tft.setTextColor(TFT_RED);
         display_obj.tft.println(F(text_table2[0]));
       #endif
-      Serial.println(F("Error, update.bin is not a file"));
+      MegaSerial.println(F("Error, update.bin is not a file"));
       #ifdef HAS_SCREEN
         display_obj.tft.setTextColor(TFT_WHITE);
       #endif
@@ -111,7 +111,7 @@ void SDInterface::runUpdate() {
       #ifdef HAS_SCREEN
         display_obj.tft.println(F(text_table2[1]));
       #endif
-      Serial.println(F("Try to start update"));
+      MegaSerial.println(F("Try to start update"));
       this->performUpdate(updateBin, updateSize);
     }
     else {
@@ -119,7 +119,7 @@ void SDInterface::runUpdate() {
         display_obj.tft.setTextColor(TFT_RED);
         display_obj.tft.println(F(text_table2[2]));
       #endif
-      Serial.println(F("Error, file is empty"));
+      MegaSerial.println(F("Error, file is empty"));
       #ifdef HAS_SCREEN
         display_obj.tft.setTextColor(TFT_WHITE);
       #endif
@@ -132,7 +132,7 @@ void SDInterface::runUpdate() {
     #ifdef HAS_SCREEN
       display_obj.tft.println(F(text_table2[3]));
     #endif
-    Serial.println(F("rebooting..."));
+    MegaSerial.println(F("rebooting..."));
     //SD.remove("/update.bin");      
     delay(1000);
     ESP.restart();
@@ -142,7 +142,7 @@ void SDInterface::runUpdate() {
       display_obj.tft.setTextColor(TFT_RED);
       display_obj.tft.println(F(text_table2[4]));
     #endif
-    Serial.println(F("Could not load update.bin from sd root"));
+    MegaSerial.println(F("Could not load update.bin from sd root"));
     #ifdef HAS_SCREEN
       display_obj.tft.setTextColor(TFT_WHITE);
     #endif
@@ -160,28 +160,28 @@ void SDInterface::performUpdate(Stream &updateSource, size_t updateSize) {
       #ifdef HAS_SCREEN
         display_obj.tft.println(text_table2[7] + String(written) + text_table2[10]);
       #endif
-      Serial.println("Written : " + String(written) + " successfully");
+      MegaSerial.println("Written : " + String(written) + " successfully");
     }
     else {
       #ifdef HAS_SCREEN
         display_obj.tft.println(text_table2[8] + String(written) + "/" + String(updateSize) + text_table2[9]);
       #endif
-      Serial.println("Written only : " + String(written) + "/" + String(updateSize) + ". Retry?");
+      MegaSerial.println("Written only : " + String(written) + "/" + String(updateSize) + ". Retry?");
     }
     if (Update.end()) {
-      Serial.println("OTA done!");
+      MegaSerial.println("OTA done!");
       if (Update.isFinished()) {
         #ifdef HAS_SCREEN
           display_obj.tft.println(F(text_table2[11]));
         #endif
-        Serial.println(F("Update successfully completed. Rebooting."));
+        MegaSerial.println(F("Update successfully completed. Rebooting."));
       }
       else {
         #ifdef HAS_SCREEN
           display_obj.tft.setTextColor(TFT_RED);
           display_obj.tft.println(text_table2[12]);
         #endif
-        Serial.println("Update not finished? Something went wrong!");
+        MegaSerial.println("Update not finished? Something went wrong!");
         #ifdef HAS_SCREEN
           display_obj.tft.setTextColor(TFT_WHITE);
         #endif
@@ -191,7 +191,7 @@ void SDInterface::performUpdate(Stream &updateSource, size_t updateSize) {
       #ifdef HAS_SCREEN
         display_obj.tft.println(text_table2[13] + String(Update.getError()));
       #endif
-      Serial.println("Error Occurred. Error #: " + String(Update.getError()));
+      MegaSerial.println("Error Occurred. Error #: " + String(Update.getError()));
     }
 
   }
@@ -200,7 +200,7 @@ void SDInterface::performUpdate(Stream &updateSource, size_t updateSize) {
     #ifdef HAS_SCREEN
       display_obj.tft.println(text_table2[14]);
     #endif
-    Serial.println("Not enough space to begin OTA");
+    MegaSerial.println("Not enough space to begin OTA");
   }
 }
 
@@ -217,7 +217,7 @@ bool SDInterface::checkDetectPin() {
 
 void SDInterface::main() {
   if ((this->supported) && (this->do_save)) {
-    //Serial.println("Saving packet...");
+    //MegaSerial.println("Saving packet...");
     buffer_obj.forceSave(&SD);
   }
   else if (!this->supported) {

@@ -58,11 +58,11 @@ MenuFunctions::MenuFunctions()
   
     if(touchX>WIDTH_1 || touchY > HEIGHT_1)
     {
-      Serial.println("Y or y outside of expected parameters..");
-      Serial.print("y:");
-      Serial.print(touchX);
-      Serial.print(" x:");
-      Serial.print(touchY);
+      MegaSerial.println("Y or y outside of expected parameters..");
+      MegaSerial.print("y:");
+      MegaSerial.print(touchX);
+      MegaSerial.print(" x:");
+      MegaSerial.print(touchY);
     }
     else
     {
@@ -74,11 +74,11 @@ MenuFunctions::MenuFunctions()
       data->point.x = touchX;
       data->point.y = touchY;
   
-      //Serial.print("Data x");
-      //Serial.println(touchX);
+      //MegaSerial.print("Data x");
+      //MegaSerial.println(touchX);
       
-      //Serial.print("Data y");
-      //Serial.println(touchY);
+      //MegaSerial.print("Data y");
+      //MegaSerial.println(touchY);
   
     }
   
@@ -109,7 +109,7 @@ MenuFunctions::MenuFunctions()
   
   
   void MenuFunctions::deinitLVGL() {
-    Serial.println(F("Deinit LVGL"));
+    MegaSerial.println(F("Deinit LVGL"));
     //lv_deinit();
   }
   
@@ -178,18 +178,18 @@ MenuFunctions::MenuFunctions()
     
     if (event == LV_EVENT_CLICKED) {
       if (btn_text == text07) {
-        Serial.println("Exiting...");
+        MegaSerial.println("Exiting...");
         lv_obj_del_async(lv_obj_get_parent(lv_obj_get_parent(btn)));
   
         printf("LV_EVENT_CANCEL\n");
-        Serial.println("Potato");
+        MegaSerial.println("Potato");
         //menu_function_obj.deinitLVGL();
         //wifi_scan_obj.StartScan(WIFI_SCAN_OFF);
         //display_obj.exit_draw = true; // set everything back to normal
       }
       else {
         // Build base obj to host buttons
-        Serial.println("Creating base object...");
+        MegaSerial.println("Creating base object...");
         lv_obj_t * obj;
         obj = lv_obj_create(lv_scr_act(), NULL);
         lv_obj_set_size(obj, LV_HOR_RES, LV_VER_RES);
@@ -217,11 +217,11 @@ MenuFunctions::MenuFunctions()
     /*
     if (event == LV_EVENT_VALUE_CHANGED) {      
       if (lv_btn_get_state(btn) == LV_BTN_STATE_CHECKED_RELEASED) {
-        //Serial.print("Toggle on: ");
-        //Serial.println(btn_text);
+        //MegaSerial.print("Toggle on: ");
+        //MegaSerial.println(btn_text);
         for (int i = 0; i < access_points->size(); i++) {
           if (access_points->get(i).essid == btn_text) {
-            Serial.println("Adding AP: " + (String)access_points->get(i).essid);
+            MegaSerial.println("Adding AP: " + (String)access_points->get(i).essid);
             AccessPoint ap = access_points->get(i);
             ap.selected = true;
             access_points->set(i, ap);
@@ -229,11 +229,11 @@ MenuFunctions::MenuFunctions()
         }
       }
       else {
-        //Serial.print("Toggle off: ");
-        //Serial.println(btn_text);
+        //MegaSerial.print("Toggle off: ");
+        //MegaSerial.println(btn_text);
         for (int i = 0; i < access_points->size(); i++) {
           if (access_points->get(i).essid == btn_text) {
-            Serial.println("Removing AP: " + (String)access_points->get(i).essid);
+            MegaSerial.println("Removing AP: " + (String)access_points->get(i).essid);
             AccessPoint ap = access_points->get(i);
             ap.selected = false;
             access_points->set(i, ap);
@@ -249,7 +249,7 @@ MenuFunctions::MenuFunctions()
     DynamicJsonDocument json(1024); // ArduinoJson v6
   
     if (deserializeJson(json, settings_obj.getSettingsString())) {
-      Serial.println("\nCould not parse json");
+      MegaSerial.println("\nCould not parse json");
     }
     
     lv_obj_t * list1 = lv_list_create(lv_scr_act(), NULL);
@@ -356,12 +356,12 @@ MenuFunctions::MenuFunctions()
         //lv_list_focus_btn(lv_obj_get_parent(lv_obj_get_parent(btn)), btn);
       }
       else {
-        Serial.println("Exiting...");
+        MegaSerial.println("Exiting...");
         lv_obj_del_async(lv_obj_get_parent(lv_obj_get_parent(btn)));
   
         for (int i = 0; i < access_points->size(); i++) {
           if (access_points->get(i).selected) {
-            Serial.println("Selected: " + (String)access_points->get(i).essid);
+            MegaSerial.println("Selected: " + (String)access_points->get(i).essid);
           }
         }
   
@@ -374,11 +374,11 @@ MenuFunctions::MenuFunctions()
     
     if (event == LV_EVENT_VALUE_CHANGED) {      
       if (lv_btn_get_state(btn) == LV_BTN_STATE_CHECKED_RELEASED) {
-        //Serial.print("Toggle on: ");
-        //Serial.println(btn_text);
+        //MegaSerial.print("Toggle on: ");
+        //MegaSerial.println(btn_text);
         for (int i = 0; i < access_points->size(); i++) {
           if (access_points->get(i).essid == btn_text) {
-            Serial.println("Adding AP: " + (String)access_points->get(i).essid);
+            MegaSerial.println("Adding AP: " + (String)access_points->get(i).essid);
             AccessPoint ap = access_points->get(i);
             ap.selected = true;
             access_points->set(i, ap);
@@ -386,11 +386,11 @@ MenuFunctions::MenuFunctions()
         }
       }
       else {
-        //Serial.print("Toggle off: ");
-        //Serial.println(btn_text);
+        //MegaSerial.print("Toggle off: ");
+        //MegaSerial.println(btn_text);
         for (int i = 0; i < access_points->size(); i++) {
           if (access_points->get(i).essid == btn_text) {
-            Serial.println("Removing AP: " + (String)access_points->get(i).essid);
+            MegaSerial.println("Removing AP: " + (String)access_points->get(i).essid);
             AccessPoint ap = access_points->get(i);
             ap.selected = false;
             access_points->set(i, ap);
@@ -502,7 +502,7 @@ MenuFunctions::MenuFunctions()
   
         String target_file_name = "/SCRIPTS/" + (String)lv_textarea_get_text(save_name);
   
-        Serial.println("Writing to target file: " + (String)target_file_name);
+        MegaSerial.println("Writing to target file: " + (String)target_file_name);
   
         // Open file with the given name
         File script = SD.open(target_file_name, FILE_WRITE);
@@ -510,8 +510,8 @@ MenuFunctions::MenuFunctions()
         if (script) {
           menu_function_obj.loaded_file = target_file_name;
   
-          Serial.println("Writing content: ");
-          Serial.println(content);
+          MegaSerial.println("Writing content: ");
+          MegaSerial.println(content);
   
           script.print(content);
   
@@ -541,8 +541,8 @@ MenuFunctions::MenuFunctions()
       String btn_text = lv_list_get_btn_text(btn);
       String display_string = "";
       //printf("Clicked: %s\n", btn_text);
-      Serial.print("Clicked: ");
-      Serial.println(btn_text);
+      MegaSerial.print("Clicked: ");
+      MegaSerial.println(btn_text);
   
       // Get file content and send to text area
       if (btn_text != text12) {
@@ -554,7 +554,7 @@ MenuFunctions::MenuFunctions()
           }
           script.close();
   
-          Serial.println(display_string);
+          MegaSerial.println(display_string);
   
           char buf[display_string.length() + 1] = {};
           display_string.toCharArray(buf, display_string.length() + 1);
@@ -587,9 +587,9 @@ MenuFunctions::MenuFunctions()
   
     if (btn_text == "Load") {
       if (event == LV_EVENT_CLICKED)
-        Serial.println("Load button pressed");
+        MegaSerial.println("Load button pressed");
       else if (event == LV_EVENT_RELEASED) {
-        Serial.println("Load button released");
+        MegaSerial.println("Load button released");
         /*Create a list*/
         lv_obj_t * list1 = lv_list_create(lv_scr_act(), NULL);
         lv_obj_set_size(list1, 160, 200);
@@ -633,9 +633,9 @@ MenuFunctions::MenuFunctions()
     // Save current text bod content to new file
     else if (btn_text == text06) {
       if (event == LV_EVENT_CLICKED)
-        Serial.println("Save button pressed");
+        MegaSerial.println("Save button pressed");
       else if (event == LV_EVENT_RELEASED) {
-        Serial.println("Save button released");
+        MegaSerial.println("Save button released");
   
         save_name = lv_textarea_create(lv_scr_act(), ta2);
         lv_textarea_set_cursor_hidden(save_name, false);
@@ -657,11 +657,11 @@ MenuFunctions::MenuFunctions()
     // Save current text box content to current loaded file
     else if (btn_text == text13) {
       if (event == LV_EVENT_CLICKED)
-        Serial.println("Save button pressed");
+        MegaSerial.println("Save button pressed");
       else if (event == LV_EVENT_RELEASED) {
-        Serial.println("Save button released");
+        MegaSerial.println("Save button released");
   
-        Serial.println("Writing to file: " + (String)menu_function_obj.loaded_file);
+        MegaSerial.println("Writing to file: " + (String)menu_function_obj.loaded_file);
   
         File script = SD.open(menu_function_obj.loaded_file, FILE_WRITE);
   
@@ -669,9 +669,9 @@ MenuFunctions::MenuFunctions()
         if (script) {
           String content = lv_textarea_get_text(ta1);
   
-          Serial.println("Writing content:");
-          Serial.println(content);
-          Serial.println("to file: " + (String)menu_function_obj.loaded_file);
+          MegaSerial.println("Writing content:");
+          MegaSerial.println(content);
+          MegaSerial.println("to file: " + (String)menu_function_obj.loaded_file);
           script.print(lv_textarea_get_text(ta1));
           script.close();
         }
@@ -692,7 +692,7 @@ MenuFunctions::MenuFunctions()
   
       String ta1_text = lv_textarea_get_text(ta1);
     
-      Serial.println(ta1_text);
+      MegaSerial.println(ta1_text);
     
       a32u4_obj.runScript(ta1_text);
     }
@@ -720,8 +720,8 @@ MenuFunctions::MenuFunctions()
   
       // Get text from SSID text box
       String ta2_text = lv_textarea_get_text(ta2);
-      //Serial.println(ta1_text);
-      Serial.println(ta2_text);
+      //MegaSerial.println(ta1_text);
+      MegaSerial.println(ta2_text);
   
       // Add text box text to list of SSIDs
       wifi_scan_obj.addSSID(ta2_text);
@@ -752,8 +752,8 @@ MenuFunctions::MenuFunctions()
       //String ta1_text = lv_textarea_get_text(lv_keyboard_get_textarea(kb));
       String ta1_text = lv_textarea_get_text(ta1);
       String ta2_text = lv_textarea_get_text(ta2);
-      Serial.println(ta1_text);
-      Serial.println(ta2_text);
+      MegaSerial.println(ta1_text);
+      MegaSerial.println(ta2_text);
       wifi_scan_obj.joinWiFi(ta1_text, ta2_text);
     }else if(event == LV_EVENT_CANCEL){
       printf("LV_EVENT_CANCEL\n");
@@ -882,7 +882,7 @@ void MenuFunctions::main(uint32_t currentTime)
           (wifi_scan_obj.currentScanMode == BT_SCAN_ALL) ||
           (wifi_scan_obj.currentScanMode == BT_SCAN_SKIMMERS))
       {
-        //Serial.println("Stopping scan...");
+        //MegaSerial.println("Stopping scan...");
         wifi_scan_obj.StartScan(WIFI_SCAN_OFF);
   
         // If we don't do this, the text and button coordinates will be off
@@ -931,7 +931,7 @@ void MenuFunctions::main(uint32_t currentTime)
           (wifi_scan_obj.currentScanMode == WIFI_SCAN_ACTIVE_EAPOL) ||
           (wifi_scan_obj.currentScanMode == WIFI_PACKET_MONITOR))
       {
-        //Serial.println("Stopping scan...");
+        //MegaSerial.println("Stopping scan...");
         wifi_scan_obj.StartScan(WIFI_SCAN_OFF);
   
         // If we don't do this, the text and button coordinates will be off
@@ -1340,10 +1340,10 @@ void MenuFunctions::orientDisplay()
   #ifndef MARAUDER_MINI
     #ifdef TFT_SHIELD
       uint16_t calData[5] = { 275, 3494, 361, 3528, 4 }; // tft.setRotation(0); // Portrait with TFT Shield
-      //Serial.println("Using TFT Shield");
+      //MegaSerial.println("Using TFT Shield");
     #else if defined(TFT_DIY)
       uint16_t calData[5] = { 339, 3470, 237, 3438, 2 }; // tft.setRotation(0); // Portrait with DIY TFT
-      //Serial.println("Using TFT DIY");
+      //MegaSerial.println("Using TFT DIY");
     #endif
 
     display_obj.tft.setTouch(calData);
@@ -1353,7 +1353,7 @@ void MenuFunctions::orientDisplay()
 }
 
 void MenuFunctions::runBoolSetting(String key) {
-  //Serial.println("Building bool setting screen...");
+  //MegaSerial.println("Building bool setting screen...");
   display_obj.tftDrawRedOnOffButton();
   //display_obj.tftDrawGreenOnOffButton();
 }
@@ -1906,11 +1906,11 @@ void MenuFunctions::showMenuList(Menu * menu, int layer)
   {
     // Depending on layer, indent
     for (uint8_t x = 0; x < layer * 4; x++)
-      Serial.print(" ");
-    Serial.print("Node: ");
-    Serial.println(menu->list->get(i).name);
+      MegaSerial.print(" ");
+    MegaSerial.print("Node: ");
+    MegaSerial.println(menu->list->get(i).name);
   }
-  Serial.println();
+  MegaSerial.println();
 }
 
 
@@ -1924,7 +1924,7 @@ void MenuFunctions::addNodes(Menu * menu, String name, uint16_t color, Menu * ch
 
 void MenuFunctions::buildButtons(Menu * menu)
 {
-  //Serial.println("Bulding buttons...");
+  //MegaSerial.println("Bulding buttons...");
   if (menu->list != NULL)
   {
     //for (int i = 0; i < sizeof(key); i++)
@@ -1953,7 +1953,7 @@ void MenuFunctions::buildButtons(Menu * menu)
 
 void MenuFunctions::displayCurrentMenu()
 {
-  //Serial.println(F("Displaying current menu..."));
+  //MegaSerial.println(F("Displaying current menu..."));
   display_obj.clearScreen();
   display_obj.tft.setTextColor(TFT_LIGHTGREY, TFT_DARKGREY);
   this->drawStatusBar();

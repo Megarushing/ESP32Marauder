@@ -18,14 +18,14 @@ void Web::main()
   if (current_sta < this->num_sta)
   {
     this->num_sta = current_sta;
-    Serial.print("Update server: Client disconnected -> ");
-    Serial.println(this->num_sta);
+    MegaSerial.print("Update server: Client disconnected -> ");
+    MegaSerial.println(this->num_sta);
   }
   else if (current_sta > this->num_sta)
   {
     this->num_sta = current_sta;
-    Serial.print("Update server: Client connected -> ");
-    Serial.println(this->num_sta);
+    MegaSerial.print("Update server: Client connected -> ");
+    MegaSerial.println(this->num_sta);
   }
   
   
@@ -35,7 +35,7 @@ void Web::main()
 
 // Callback for the embedded jquery.min.js page
 void Web::onJavaScript(void) {
-    Serial.println("onJavaScript(void)");
+    MegaSerial.println("onJavaScript(void)");
     server.setContentLength(jquery_min_js_v3_2_1_gz_len);
     server.sendHeader(F("Content-Encoding"), F("gzip"));
     server.send_P(200, "text/javascript", jquery_min_js_v3_2_1_gz, jquery_min_js_v3_2_1_gz_len);
@@ -53,35 +53,35 @@ void Web::setupOTAupdate()
     display_obj.tft.setTextColor(TFT_WHITE);
   #endif
 
-  Serial.println(wifi_scan_obj.freeRAM());
+  MegaSerial.println(wifi_scan_obj.freeRAM());
   #ifdef HAS_SCREEN
     display_obj.tft.print(text_table3[0]);  
   #endif
-  Serial.println("Configuring update server...");
+  MegaSerial.println("Configuring update server...");
 
   #ifdef HAS_SCREEN
     display_obj.tft.setTextColor(TFT_YELLOW);
   #endif
   
   // Start WiFi AP
-  Serial.println("Initializing WiFi...");
+  MegaSerial.println("Initializing WiFi...");
   //wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
   esp_wifi_init(&wifi_scan_obj.cfg);
   //esp_wifi_set_storage(WIFI_STORAGE_RAM);
   if (esp_wifi_set_storage(WIFI_STORAGE_FLASH) != ESP_OK)
-    Serial.println("Could not set WiFi Storage!");
+    MegaSerial.println("Could not set WiFi Storage!");
   esp_wifi_set_mode(WIFI_MODE_NULL);
   esp_wifi_start();
-  Serial.println(wifi_scan_obj.freeRAM());
+  MegaSerial.println(wifi_scan_obj.freeRAM());
 
-  Serial.println("Starting softAP...");
+  MegaSerial.println("Starting softAP...");
   esp_wifi_set_mac(WIFI_IF_AP, &newMACAddress[0]);
   WiFi.softAP(ssid, password);
-  Serial.println("");
+  MegaSerial.println("");
 
-  Serial.println(wifi_scan_obj.freeRAM());
+  MegaSerial.println(wifi_scan_obj.freeRAM());
 
-  Serial.println("Displaying settings to TFT...");
+  MegaSerial.println("Displaying settings to TFT...");
   #ifdef HAS_SCREEN
     display_obj.tft.print(text_table1[2]);
     display_obj.tft.println(ssid);
@@ -89,12 +89,12 @@ void Web::setupOTAupdate()
     display_obj.tft.print(WiFi.softAPIP());
     display_obj.tft.print("\n");
   #endif
-  Serial.print("IP address: ");
-  Serial.println(WiFi.softAPIP());
+  MegaSerial.print("IP address: ");
+  MegaSerial.println(WiFi.softAPIP());
 
   // return javascript jquery
-  Serial.println("Setting server behavior...");
-  Serial.println(wifi_scan_obj.freeRAM());
+  MegaSerial.println("Setting server behavior...");
+  MegaSerial.println(wifi_scan_obj.freeRAM());
   server.on("/jquery.min.js", HTTP_GET, onJavaScript);
   /*return index page which is stored in serverIndex */
   server.on("/", HTTP_GET, [this]() {
@@ -119,7 +119,7 @@ void Web::setupOTAupdate()
         display_obj.tft.print(upload.filename.c_str());
         display_obj.tft.print("\n");
       #endif
-      Serial.printf("Update: %s\n", upload.filename.c_str());
+      MegaSerial.printf("Update: %s\n", upload.filename.c_str());
       if (!Update.begin(UPDATE_SIZE_UNKNOWN)) { //start with max available size
         Update.printError(Serial);
       }
@@ -145,7 +145,7 @@ void Web::setupOTAupdate()
           display_obj.tft.print(upload.totalSize);
           display_obj.tft.print(text_table2[3]);
         #endif
-        Serial.printf("Update Success: %u\nRebooting...\n", upload.totalSize);
+        MegaSerial.printf("Update Success: %u\nRebooting...\n", upload.totalSize);
         delay(1000);
       } else {
         Update.printError(Serial);
@@ -154,25 +154,25 @@ void Web::setupOTAupdate()
   });
 
   
-  Serial.println("Finished setting server behavior");
-  Serial.println(wifi_scan_obj.freeRAM());
-  Serial.println("Starting server...");
+  MegaSerial.println("Finished setting server behavior");
+  MegaSerial.println(wifi_scan_obj.freeRAM());
+  MegaSerial.println("Starting server...");
   server.begin();
 
   #ifdef HAS_SCREEN
     display_obj.tft.setTextColor(TFT_GREEN);
     display_obj.tft.println(text_table3[5]);
   #endif
-  Serial.println("Completed update server setup");
-  Serial.println(wifi_scan_obj.freeRAM());
+  MegaSerial.println("Completed update server setup");
+  MegaSerial.println(wifi_scan_obj.freeRAM());
 }
 
 void Web::shutdownServer() {
-  Serial.println("Closing Update Server...");
+  MegaSerial.println("Closing Update Server...");
   server.stop();
   WiFi.mode(WIFI_OFF);
   esp_wifi_set_mode(WIFI_MODE_NULL);
   esp_wifi_stop();
   esp_wifi_deinit();
-  Serial.println(wifi_scan_obj.freeRAM());
+  MegaSerial.println(wifi_scan_obj.freeRAM());
 }

@@ -28,7 +28,7 @@ uint8_t TemperatureInterface::getCurrentTemp() {
 void TemperatureInterface::main(uint32_t currentTime) {
   if (currentTime != 0) {
     if (currentTime - initTime >= 100) {
-      //Serial.println("Checking Battery Level");
+      //MegaSerial.println("Checking Battery Level");
       this->initTime = millis();
       this->current_temp = this->getCurrentTemp();
     }

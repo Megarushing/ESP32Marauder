@@ -13,7 +13,7 @@ void Buffer::open(fs::FS* fs, String fn){
     i++;
   } while(fs->exists(fileName));
 
-  Serial.println(fileName);
+  MegaSerial.println(fileName);
   
   file = fs->open(fileName, FILE_WRITE);
   file.close();
@@ -38,24 +38,24 @@ void Buffer::close(fs::FS* fs){
   if(!writing) return;
   forceSave(fs);
   writing = false;
-  Serial.println(text01);
+  MegaSerial.println(text01);
 }
 
 void Buffer::addPacket(uint8_t* buf, uint32_t len){
   
   // buffer is full -> drop packet
   if((useA && bufSizeA + len >= BUF_SIZE && bufSizeB > 0) || (!useA && bufSizeB + len >= BUF_SIZE && bufSizeA > 0)){
-    //Serial.print(";"); 
+    //MegaSerial.print(";"); 
     return;
   }
   
   if(useA && bufSizeA + len + 16 >= BUF_SIZE && bufSizeB == 0){
     useA = false;
-    //Serial.println("\nswitched to buffer B");
+    //MegaSerial.println("\nswitched to buffer B");
   }
   else if(!useA && bufSizeB + len + 16 >= BUF_SIZE && bufSizeA == 0){
     useA = true;
-    //Serial.println("\nswitched to buffer A");
+    //MegaSerial.println("\nswitched to buffer A");
   }
 
   uint32_t microSeconds = micros(); // e.g. 45200400 => 45s 200ms 400us
@@ -113,18 +113,18 @@ void Buffer::save(fs::FS* fs){
 
   // buffers are already emptied, therefor saving is unecessary
   if((useA && bufSizeB == 0) || (!useA && bufSizeA == 0)){
-    //Serial.printf("useA: %s, bufA %u, bufB %u\n",useA ? "true" : "false",bufSizeA,bufSizeB); // for debug porpuses
+    //MegaSerial.printf("useA: %s, bufA %u, bufB %u\n",useA ? "true" : "false",bufSizeA,bufSizeB); // for debug porpuses
     return;
   }
   
-  //Serial.println("saving file");
+  //MegaSerial.println("saving file");
   
   uint32_t startTime = millis();
   uint32_t finishTime;
 
   file = fs->open(fileName, FILE_APPEND);
   if (!file) {
-    Serial.println(text02 + fileName+"'");
+    MegaSerial.println(text02 + fileName+"'");
     //useSD = false;
     return;
   }
@@ -148,7 +148,7 @@ void Buffer::save(fs::FS* fs){
   
   finishTime = millis() - startTime;
 
-  //Serial.printf("\n%u bytes written for %u ms\n", len, finishTime);
+  //MegaSerial.printf("\n%u bytes written for %u ms\n", len, finishTime);
   
   saving = false;
   
@@ -160,7 +160,7 @@ void Buffer::forceSave(fs::FS* fs){
   
   file = fs->open(fileName, FILE_APPEND);
   if (!file) {
-    Serial.println(text02+fileName+"'");
+    MegaSerial.println(text02+fileName+"'");
     //useSD = false;
     return;
   }
@@ -196,7 +196,7 @@ void Buffer::forceSave(fs::FS* fs){
 
   file.close();
 
-  //Serial.printf("saved %u bytes\n",len);
+  //MegaSerial.printf("saved %u bytes\n",len);
 
   saving = false;
   writing = true;

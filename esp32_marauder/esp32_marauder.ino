@@ -7,6 +7,8 @@ https://www.online-utility.org/image/convert/to/XBM
 
 #include "configs.h"
 
+#include <HardwareSerial.h>
+
 #ifndef HAS_SCREEN
   #define MenuFunctions_h
   #define Display_h
@@ -71,17 +73,18 @@ flipperLED flipper_led;
 
 const String PROGMEM version_number = MARAUDER_VERSION;
 
+HardwareSerial MegaSerial(0);
+
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(Pixels, PIN, NEO_GRB + NEO_KHZ800);
 
 uint32_t currentTime  = 0;
-
 
 void backlightOn() {
   #ifdef HAS_SCREEN
     #ifdef MARAUDER_MINI
       digitalWrite(TFT_BL, LOW);
     #endif
-  
+
     #ifndef MARAUDER_MINI
       digitalWrite(TFT_BL, HIGH);
     #endif
@@ -93,7 +96,7 @@ void backlightOff() {
     #ifdef MARAUDER_MINI
       digitalWrite(TFT_BL, HIGH);
     #endif
-  
+
     #ifndef MARAUDER_MINI
       digitalWrite(TFT_BL, LOW);
     #endif
@@ -103,18 +106,19 @@ void backlightOff() {
 
 void setup()
 {
+  MegaSerial.begin(115200, SERIAL_8N1, 11, 12);
   pinMode(FLASH_BUTTON, INPUT);
 
   #ifdef HAS_SCREEN
     pinMode(TFT_BL, OUTPUT);
   #endif
-  
+
   backlightOff();
 #if BATTERY_ANALOG_ON == 1
   pinMode(BATTERY_PIN, OUTPUT);
   pinMode(CHARGING_PIN, INPUT);
 #endif
-  
+
   // Preset SPI CS pins to avoid bus conflicts
   #ifdef HAS_SCREEN
     digitalWrite(TFT_CS, HIGH);
@@ -123,23 +127,23 @@ void setup()
   pinMode(SD_CS, OUTPUT);
 
   delay(10);
-  
+
   digitalWrite(SD_CS, HIGH);
 
   delay(10);
 
-  Serial.begin(115200);
-  
-  //Serial.begin(115200);
+  #include "esp_interface.h"
 
-  //Serial.println("\n\nHello, World!\n");
+  //MegaSerial.begin(115200);
 
-  Serial.println("ESP-IDF version is: " + String(esp_get_idf_version()));
+  //MegaSerial.println("\n\nHello, World!\n");
+
+  MegaSerial.println("ESP-IDF version is: " + String(esp_get_idf_version()));
 
   //#ifdef HAS_SCREEN
-  //  Serial.println("Has Screen");
+  //  MegaSerial.println("Has Screen");
   //#else
-  //  Serial.println("Does not have screen");
+  //  MegaSerial.println("Does not have screen");
   //#endif
 
   #ifdef MARAUDER_FLIPPER
@@ -163,7 +167,7 @@ void setup()
     #ifndef MARAUDER_MINI
       display_obj.tft.drawCentreString(display_obj.version_number, 120, 250, 2);
     #endif
-  
+
     #ifdef MARAUDER_MINI
       display_obj.tft.drawCentreString(display_obj.version_number, TFT_WIDTH/2, TFT_HEIGHT, 1);
     #endif
@@ -175,31 +179,31 @@ void setup()
     delay(2000);
 
     display_obj.clearScreen();
-  
+
     display_obj.tft.setTextColor(TFT_CYAN, TFT_BLACK);
-  
+
     display_obj.tft.println(text_table0[0]);
-  
+
     delay(2000);
-  
+
     display_obj.tft.println("Marauder " + display_obj.version_number + "\n");
-  
+
     display_obj.tft.println(text_table0[1]);
   #endif
 
-  //Serial.println("Internal Temp: " + (String)((temprature_sens_read() - 32) / 1.8));
+  //MegaSerial.println("Internal Temp: " + (String)((temprature_sens_read() - 32) / 1.8));
 
   settings_obj.begin();
 
-  //Serial.println("This is a test Channel: " + (String)settings_obj.loadSetting<uint8_t>("Channel"));
+  //MegaSerial.println("This is a test Channel: " + (String)settings_obj.loadSetting<uint8_t>("Channel"));
   //if (settings_obj.loadSetting<bool>( "Force PMKID"))
-  //  Serial.println("This is a test Force PMKID: true");
+  //  MegaSerial.println("This is a test Force PMKID: true");
   //else
-  //  Serial.println("This is a test Force PMKID: false");
+  //  MegaSerial.println("This is a test Force PMKID: false");
 
   wifi_scan_obj.RunSetup();
 
-  //Serial.println(wifi_scan_obj.freeRAM());
+  //MegaSerial.println(wifi_scan_obj.freeRAM());
 
   #ifdef HAS_SCREEN
     display_obj.tft.println(F(text_table0[2]));
@@ -207,13 +211,13 @@ void setup()
 
   // Do some SD stuff
   if(sd_obj.initSD()) {
-    //Serial.println(F("SD Card supported"));
+    //MegaSerial.println(F("SD Card supported"));
     #ifdef HAS_SCREEN
       display_obj.tft.println(F(text_table0[3]));
     #endif
   }
   else {
-    Serial.println(F("SD Card NOT Supported"));
+    MegaSerial.println(F("SD Card NOT Supported"));
     #ifdef HAS_SCREEN
       display_obj.tft.setTextColor(TFT_RED, TFT_BLACK);
       display_obj.tft.println(F(text_table0[4]));
@@ -238,12 +242,12 @@ void setup()
 
   #ifndef MARAUDER_FLIPPER
     battery_obj.battery_level = battery_obj.getBatteryLevel();
-  
+
 //    if (battery_obj.i2c_supported) {
-//      Serial.println(F("IP5306 I2C Supported: true"));
+//      MegaSerial.println(F("IP5306 I2C Supported: true"));
 //    }
 //    else
-//      Serial.println(F("IP5306 I2C Supported: false"));
+//      MegaSerial.println(F("IP5306 I2C Supported: false"));
   #endif
 
   // Do some LED stuff
@@ -259,9 +263,9 @@ void setup()
 
   #ifdef HAS_SCREEN
     display_obj.tft.println(F(text_table0[8]));
-  
+
     display_obj.tft.setTextColor(TFT_WHITE, TFT_BLACK);
-  
+
     delay(2000);
   #endif
 
@@ -269,13 +273,13 @@ void setup()
     menu_function_obj.RunSetup();
   #endif
 
-  //Serial.println(F("\n\n--------------------------------\n"));
-  //Serial.println(F("         ESP32 Marauder      \n"));
-  //Serial.println("            " + version_number + "\n");
-  //Serial.println(F("       By: justcallmekoko\n"));
-  //Serial.println(F("--------------------------------\n\n"));
-  
-  Serial.println("CLI Ready");
+  //MegaSerial.println(F("\n\n--------------------------------\n"));
+  //MegaSerial.println(F("         ESP32 Marauder      \n"));
+  //MegaSerial.println("            " + version_number + "\n");
+  //MegaSerial.println(F("       By: justcallmekoko\n"));
+  //MegaSerial.println(F("--------------------------------\n\n"));
+
+  MegaSerial.println("CLI Ready");
   cli_obj.RunSetup();
 }
 
@@ -295,7 +299,7 @@ void loop()
   #else
     bool do_draw = false;
   #endif
-  
+
   if ((!do_draw) && (wifi_scan_obj.currentScanMode != ESP_UPDATE))
   {
     cli_obj.main(currentTime);

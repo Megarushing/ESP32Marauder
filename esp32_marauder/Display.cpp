@@ -28,10 +28,10 @@ void Display::RunSetup()
 
     #ifdef TFT_SHIELD
       uint16_t calData[5] = { 275, 3494, 361, 3528, 4 }; // tft.setRotation(0); // Portrait with TFT Shield
-      //Serial.println(F("Using TFT Shield"));
+      //MegaSerial.println(F("Using TFT Shield"));
     #else if defined(TFT_DIY)
       uint16_t calData[5] = { 339, 3470, 237, 3438, 2 }; // tft.setRotation(0); // Portrait with DIY TFT
-      //Serial.println(F("Using TFT DIY"));
+      //MegaSerial.println(F("Using TFT DIY"));
     #endif
     tft.setTouch(calData);
 
@@ -40,9 +40,9 @@ void Display::RunSetup()
   //tft.fillScreen(TFT_BLACK);
   clearScreen();
 
-  //Serial.println("SPI_FREQUENCY: " + (String)SPI_FREQUENCY);
-  //Serial.println("SPI_READ_FREQUENCY:" + (String)SPI_READ_FREQUENCY);
-  //Serial.println("SPI_TOUCH_FREQUENCY: " + (String)SPI_TOUCH_FREQUENCY);
+  //MegaSerial.println("SPI_FREQUENCY: " + (String)SPI_FREQUENCY);
+  //MegaSerial.println("SPI_READ_FREQUENCY:" + (String)SPI_READ_FREQUENCY);
+  //MegaSerial.println("SPI_TOUCH_FREQUENCY: " + (String)SPI_TOUCH_FREQUENCY);
 
   #ifdef KIT
     pinMode(KIT_LED_BUILTIN, OUTPUT);
@@ -251,7 +251,7 @@ void Display::touchToExit()
 // Function to just draw the screen black
 void Display::clearScreen()
 {
-  //Serial.println(F("clearScreen()"));
+  //MegaSerial.println(F("clearScreen()"));
   tft.fillScreen(TFT_BLACK);
   tft.setCursor(0, 0);
 }
@@ -320,7 +320,7 @@ void Display::showCenterText(String text, int y)
 
 void Display::initScrollValues(bool tte)
 {
-  //Serial.println(F("initScrollValues()"));
+  //MegaSerial.println(F("initScrollValues()"));
   yDraw = YMAX - BOT_FIXED_AREA - TEXT_HEIGHT;
 
   xPos = 0;
@@ -345,7 +345,7 @@ void Display::initScrollValues(bool tte)
 
 // Function to execute hardware scroll for TFT screen
 int Display::scroll_line(uint32_t color) {
-  //Serial.println("scroll_line()");
+  //MegaSerial.println("scroll_line()");
   int yTemp = yStart; // Store the old yStart, this is where we draw the next line
   // Use the record of line lengths to optimise the rectangle size we need to erase the top line
 
@@ -376,10 +376,10 @@ int Display::scroll_line(uint32_t color) {
 
 // Function to setup hardware scroll for TFT screen
 void Display::setupScrollArea(uint16_t tfa, uint16_t bfa) {
-  //Serial.println(F("setupScrollArea()"));
-  //Serial.println("   tfa: " + (String)tfa);
-  //Serial.println("   bfa: " + (String)bfa);
-  //Serial.println("yStart: " + (String)this->yStart);
+  //MegaSerial.println(F("setupScrollArea()"));
+  //MegaSerial.println("   tfa: " + (String)tfa);
+  //MegaSerial.println("   bfa: " + (String)bfa);
+  //MegaSerial.println("yStart: " + (String)this->yStart);
   #ifndef MARAUDER_MINI
     tft.writecommand(ILI9341_VSCRDEF); // Vertical scroll definition
     tft.writedata(tfa >> 8);           // Top Fixed Area line count
@@ -413,7 +413,7 @@ void Display::drawJpeg(const char *filename, int xpos, int ypos) {
 
   //ESP32 always seems to return 1 for jpegFile so this null trap does not work
   //if ( !jpegFile ) {
-  //  Serial.print("ERROR: File \""); Serial.print(filename); Serial.println ("\" not found!");
+  //  MegaSerial.print("ERROR: File \""); MegaSerial.print(filename); MegaSerial.println ("\" not found!");
   //  return;
   //}
 
@@ -431,7 +431,7 @@ void Display::drawJpeg(const char *filename, int xpos, int ypos) {
     jpegRender(xpos, ypos);
   }
   //else {
-  //  Serial.println(F("Jpeg file format not supported!"));
+  //  MegaSerial.println(F("Jpeg file format not supported!"));
   //}
 }
 
@@ -452,7 +452,7 @@ void Display::drawStylus()
   boolean pressed = tft.getTouch(&x, &y);
 
   if ((x <= 10) && (y <= 10) && (pressed)) {
-    //Serial.println(F("Exit draw function"));
+    //MegaSerial.println(F("Exit draw function"));
     this->draw_tft = false;
     this->exit_draw = true;
     return;
@@ -497,10 +497,10 @@ void Display::drawStylus()
     xlast = x;
     ylast = y;
     AH = 0;
-    //Serial.print("x,y = ");
-    //Serial.print(x);
-    //Serial.print(",");
-    //Serial.println(y);
+    //MegaSerial.print("x,y = ");
+    //MegaSerial.print(x);
+    //MegaSerial.print(",");
+    //MegaSerial.println(y);
   } else if ( AH < 5 ) {
     AH++;
   } else if ( AH == 5 ) {
@@ -586,19 +586,19 @@ void Display::jpegRender(int xpos, int ypos) {
 //====================================================================================
 void Display::jpegInfo() {
 /*
-  Serial.println("===============");
-  Serial.println("JPEG image info");
-  Serial.println("===============");
-  Serial.print  ("Width      :"); Serial.println(JpegDec.width);
-  Serial.print  ("Height     :"); Serial.println(JpegDec.height);
-  Serial.print  ("Components :"); Serial.println(JpegDec.comps);
-  Serial.print  ("MCU / row  :"); Serial.println(JpegDec.MCUSPerRow);
-  Serial.print  ("MCU / col  :"); Serial.println(JpegDec.MCUSPerCol);
-  Serial.print  ("Scan type  :"); Serial.println(JpegDec.scanType);
-  Serial.print  ("MCU width  :"); Serial.println(JpegDec.MCUWidth);
-  Serial.print  ("MCU height :"); Serial.println(JpegDec.MCUHeight);
-  Serial.println("===============");
-  Serial.println("");
+  MegaSerial.println("===============");
+  MegaSerial.println("JPEG image info");
+  MegaSerial.println("===============");
+  MegaSerial.print  ("Width      :"); MegaSerial.println(JpegDec.width);
+  MegaSerial.print  ("Height     :"); MegaSerial.println(JpegDec.height);
+  MegaSerial.print  ("Components :"); MegaSerial.println(JpegDec.comps);
+  MegaSerial.print  ("MCU / row  :"); MegaSerial.println(JpegDec.MCUSPerRow);
+  MegaSerial.print  ("MCU / col  :"); MegaSerial.println(JpegDec.MCUSPerCol);
+  MegaSerial.print  ("Scan type  :"); MegaSerial.println(JpegDec.scanType);
+  MegaSerial.print  ("MCU width  :"); MegaSerial.println(JpegDec.MCUWidth);
+  MegaSerial.print  ("MCU height :"); MegaSerial.println(JpegDec.MCUHeight);
+  MegaSerial.println("===============");
+  MegaSerial.println("");
   */
 }
 
@@ -612,38 +612,38 @@ void createArray(const char *filename) {
   //  File jpgFile = SD.open( filename, FILE_READ);  // or, file handle reference for SD library
 
   if ( !jpgFile ) {
-    Serial.print("ERROR: File \""); Serial.print(filename); Serial.println ("\" not found!");
+    MegaSerial.print("ERROR: File \""); MegaSerial.print(filename); MegaSerial.println ("\" not found!");
     return;
   }
 
   uint8_t data;
   byte line_len = 0;
-  Serial.println("");
-  Serial.println(F("// Generated by a JPEGDecoder library example sketch:"));
-  Serial.println(F("// https://github.com/Bodmer/JPEGDecoder"));
-  Serial.println("");
-  Serial.println(F("#if defined(__AVR__)"));
-  Serial.println(F("  #include <avr/pgmspace.h>"));
-  Serial.println(F("#endif"));
-  Serial.println("");
-  Serial.print  (F("const uint8_t "));
-  while (*filename != '.') Serial.print(*filename++);
-  Serial.println(F("[] PROGMEM = {")); // PROGMEM added for AVR processors, it is ignored by Due
+  MegaSerial.println("");
+  MegaSerial.println(F("// Generated by a JPEGDecoder library example sketch:"));
+  MegaSerial.println(F("// https://github.com/Bodmer/JPEGDecoder"));
+  MegaSerial.println("");
+  MegaSerial.println(F("#if defined(__AVR__)"));
+  MegaSerial.println(F("  #include <avr/pgmspace.h>"));
+  MegaSerial.println(F("#endif"));
+  MegaSerial.println("");
+  MegaSerial.print  (F("const uint8_t "));
+  while (*filename != '.') MegaSerial.print(*filename++);
+  MegaSerial.println(F("[] PROGMEM = {")); // PROGMEM added for AVR processors, it is ignored by Due
 
   while ( jpgFile.available()) {
 
     data = jpgFile.read();
-    Serial.print("0x"); if (abs(data) < 16) Serial.print("0");
-    Serial.print(data, HEX); Serial.print(",");// Add value and comma
+    MegaSerial.print("0x"); if (abs(data) < 16) MegaSerial.print("0");
+    MegaSerial.print(data, HEX); MegaSerial.print(",");// Add value and comma
     line_len++;
     if ( line_len >= 32) {
       line_len = 0;
-      Serial.println();
+      MegaSerial.println();
     }
 
   }
 
-  Serial.println("};\r\n");
+  MegaSerial.println("};\r\n");
   jpgFile.close();
 }
 
@@ -653,31 +653,31 @@ void createArray(const char *filename) {
 
 #ifdef ESP8266
 void Display::listFiles(void) {
-  Serial.println();
-  Serial.println(F("SPIFFS files found:"));
+  MegaSerial.println();
+  MegaSerial.println(F("SPIFFS files found:"));
 
   fs::Dir dir = SPIFFS.openDir("/"); // Root directory
   String  line = "=====================================";
 
-  Serial.println(line);
-  Serial.println(F("  File name               Size"));
-  Serial.println(line);
+  MegaSerial.println(line);
+  MegaSerial.println(F("  File name               Size"));
+  MegaSerial.println(line);
 
   while (dir.next()) {
     String fileName = dir.fileName();
-    Serial.print(fileName);
+    MegaSerial.print(fileName);
     int spaces = 21 - fileName.length(); // Tabulate nicely
-    while (spaces--) Serial.print(" ");
+    while (spaces--) MegaSerial.print(" ");
 
     fs::File f = dir.openFile("r");
     String fileSize = (String) f.size();
     spaces = 10 - fileSize.length(); // Tabulate nicely
-    while (spaces--) Serial.print(" ");
-    Serial.println(fileSize + " bytes");
+    while (spaces--) MegaSerial.print(" ");
+    MegaSerial.println(fileSize + " bytes");
   }
 
-  Serial.println(line);
-  Serial.println();
+  MegaSerial.println(line);
+  MegaSerial.println();
   delay(1000);
 }
 #endif
@@ -692,23 +692,23 @@ void Display::listFiles(void) {
 
 void Display::listDir(fs::FS &fs, const char * dirname, uint8_t levels) {
 
-  Serial.println();
-  Serial.println(F("SPIFFS files found:"));
+  MegaSerial.println();
+  MegaSerial.println(F("SPIFFS files found:"));
 
-  Serial.printf("Listing directory: %s\n", "/");
+  MegaSerial.printf("Listing directory: %s\n", "/");
   String  line = "=====================================";
 
-  Serial.println(line);
-  Serial.println(F("  File name               Size"));
-  Serial.println(line);
+  MegaSerial.println(line);
+  MegaSerial.println(F("  File name               Size"));
+  MegaSerial.println(line);
 
   fs::File root = fs.open(dirname);
   if (!root) {
-    Serial.println(F("Failed to open directory"));
+    MegaSerial.println(F("Failed to open directory"));
     return;
   }
   if (!root.isDirectory()) {
-    Serial.println(F("Not a directory"));
+    MegaSerial.println(F("Not a directory"));
     return;
   }
 
@@ -716,28 +716,28 @@ void Display::listDir(fs::FS &fs, const char * dirname, uint8_t levels) {
   while (file) {
 
     if (file.isDirectory()) {
-      Serial.print("DIR : ");
+      MegaSerial.print("DIR : ");
       String fileName = file.name();
-      Serial.print(fileName);
+      MegaSerial.print(fileName);
       if (levels) {
         listDir(fs, file.name(), levels - 1);
       }
     } else {
       String fileName = file.name();
-      Serial.print("  " + fileName);
+      MegaSerial.print("  " + fileName);
       int spaces = 20 - fileName.length(); // Tabulate nicely
-      while (spaces--) Serial.print(" ");
+      while (spaces--) MegaSerial.print(" ");
       String fileSize = (String) file.size();
       spaces = 10 - fileSize.length(); // Tabulate nicely
-      while (spaces--) Serial.print(" ");
-      Serial.println(fileSize + " bytes");
+      while (spaces--) MegaSerial.print(" ");
+      MegaSerial.println(fileSize + " bytes");
     }
 
     file = root.openNextFile();
   }
 
-  Serial.println(line);
-  Serial.println();
+  MegaSerial.println(line);
+  MegaSerial.println();
   delay(1000);
 }
 #endif

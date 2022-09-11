@@ -17,6 +17,8 @@
   extern Display display_obj;
 #endif
 
+extern HardwareSerial MegaSerial;
+
 class EspInterface {
   public:
     bool supported = false;

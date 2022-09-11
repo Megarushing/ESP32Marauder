@@ -1,6 +1,6 @@
 #include "esp_interface.h"
 
-HardwareSerial MySerial(1);
+HardwareSerial MyMegaSerial(1);
 
 void EspInterface::begin() {
   pinMode(ESP_RST, OUTPUT);
@@ -10,9 +10,9 @@ void EspInterface::begin() {
 
   digitalWrite(ESP_ZERO, HIGH);
 
-  Serial.println("Checking for ESP8266...");
+  MegaSerial.println("Checking for ESP8266...");
 
-  MySerial.begin(BAUD, SERIAL_8N1, 27, 26);
+  MyMegaSerial.begin(BAUD, SERIAL_8N1, 39, 37);
 
   delay(100);
 
@@ -24,30 +24,30 @@ void EspInterface::begin() {
 
   delay(500);
 
-  while (MySerial.available())
-    MySerial.read();
+  while (MyMegaSerial.available())
+    MyMegaSerial.read();
 
-  MySerial.write("PING");
+  MyMegaSerial.write("PING");
 
   delay(2000);
 
   String display_string = "";
 
-  while (MySerial.available()) {
-    display_string.concat((char)MySerial.read());
+  while (MyMegaSerial.available()) {
+    display_string.concat((char)MyMegaSerial.read());
   }
 
   display_string.trim();
 
-  Serial.println("\nDisplay string: " + (String)display_string);
-  
+  MegaSerial.println("\nDisplay string: " + (String)display_string);
+
   if (display_string == "ESP8266 Pong") {
     #ifdef HAS_SCREEN
       display_obj.tft.setTextColor(TFT_GREEN, TFT_BLACK);
       display_obj.tft.println("ESP8266 Found!");
       display_obj.tft.setTextColor(TFT_CYAN, TFT_BLACK);
     #endif
-    Serial.println("ESP8266 Found!");
+    MegaSerial.println("ESP8266 Found!");
     this->supported = true;
   }
   else {
@@ -69,9 +69,9 @@ void EspInterface::RunUpdate() {
     display_obj.tft.setCursor(0, 100);
     display_obj.tft.setTextSize(1);
     display_obj.tft.setTextColor(TFT_GREEN);
-  
+
     display_obj.tft.println("Waiting for serial data...");
-  
+
     display_obj.tft.setTextColor(TFT_WHITE);
   #endif
 }
@@ -105,16 +105,16 @@ void EspInterface::bootRunMode() {
 }
 
 void EspInterface::program() {
-  if (MySerial.available()) {
-    Serial.write((uint8_t)MySerial.read());
+  if (MyMegaSerial.available()) {
+    MegaSerial.write((uint8_t)MyMegaSerial.read());
   }
 
-  if (Serial.available()) {
+  if (MegaSerial.available()) {
     #ifdef HAS_SCREEN
       display_obj.tft.print(".");
     #endif
-    while (Serial.available()) {
-      MySerial.write((uint8_t)Serial.read());
+    while (MegaSerial.available()) {
+      MyMegaSerial.write((uint8_t)MegaSerial.read());
     }
   }
 }
@@ -122,14 +122,14 @@ void EspInterface::program() {
 void EspInterface::main(uint32_t current_time) {
   if (current_time - this->initTime >= 1000) {
     this->initTime = millis();
-    //MySerial.write("PING");
-  }
-  
-  while (MySerial.available()) {
-    Serial.print((char)MySerial.read());
+    //MyMegaSerial.write("PING");
   }
 
-  if (Serial.available()) {
-    MySerial.write((uint8_t)Serial.read());
+  while (MyMegaSerial.available()) {
+    MegaSerial.print((char)MyMegaSerial.read());
+  }
+
+  if (MegaSerial.available()) {
+    MyMegaSerial.write((uint8_t)MegaSerial.read());
   }
 }

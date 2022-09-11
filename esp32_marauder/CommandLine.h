@@ -18,6 +18,8 @@
   extern Display display_obj;
 #endif
 
+extern HardwareSerial MegaSerial;
+
 extern WiFiScan wifi_scan_obj;
 extern Web web_obj;
 extern SDInterface sd_obj;
