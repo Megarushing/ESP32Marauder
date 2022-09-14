@@ -10,6 +10,7 @@
 class flipperLED {
 
   public:
+    void flashLED();
     void RunSetup();
     void attackLED();
     void sniffLED();
