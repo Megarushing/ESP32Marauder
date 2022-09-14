@@ -3,6 +3,11 @@
 <!---[![Build Status](https://travis-ci.com/justcallmekoko/ESP32Marauder.svg?branch=master)](https://travis-ci.com/justcallmekoko/ESP32Marauder)--->
 <!---Shields/Badges https://shields.io/--->
 
+# This Fork and the ESP32-S2 Mini
+This is a Fork of the ESP32 Marauder, which allows for using any GPIO ports for serial/command line interface, 
+
+This was necessary to get ESP32-S2 Mini working on it since it does not expose the TX/RX ports in the breakouts
+
 # ESP32 Marauder v0.9.15
 <p align="center"><img alt="Marauder logo" src="https://github.com/justcallmekoko/ESP32Marauder/blob/master/pictures/marauder3L.jpg?raw=true" width="300"></p>
 <p align="center">
